@@ -303,10 +303,34 @@ input.custom-select::placeholder{color:var(--text3);}
 .modal-year{font-size:12px;color:var(--text3);margin-bottom:16px;}
 .divider{height:1.5px;background:var(--border);margin:14px 0;border-radius:2px;}
 .form-label{font-size:10px;font-weight:800;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:7px;}
-.star-picker{display:flex;gap:4px;margin-bottom:14px;}
-.star-picker span{font-size:28px;color:var(--border2);cursor:pointer;transition:color 0.1s,transform 0.12s;user-select:none;}
-.star-picker span:hover{transform:scale(1.2);}
-.star-picker span.on{color:var(--yellow);filter:drop-shadow(0 0 5px rgba(245,158,11,0.5));}
+.rating-picker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.rating-opt{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 10px;border-radius:var(--radius-lg);border:2px solid var(--border2);
+  background:var(--surface2);cursor:pointer;transition:all 0.15s;min-width:48px;
+  font-size:11px;font-weight:700;color:var(--text2);
+}
+.rating-opt .r-emoji{font-size:20px;line-height:1;}
+.rating-opt:hover{border-color:var(--purple);background:rgba(124,58,237,0.06);color:var(--purple);}
+.rating-opt.on{border-color:transparent;color:#fff;box-shadow:0 3px 12px rgba(124,58,237,0.25);}
+.rating-opt[data-v="1"].on{background:linear-gradient(135deg,#ef4444,#f97316);}
+.rating-opt[data-v="2"].on{background:linear-gradient(135deg,#f97316,#f59e0b);}
+.rating-opt[data-v="3"].on{background:linear-gradient(135deg,#f59e0b,#84cc16);}
+.rating-opt[data-v="4"].on{background:linear-gradient(135deg,#10b981,#0d9488);}
+.rating-opt[data-v="5"].on{background:linear-gradient(135deg,#7c3aed,#f43f8e);}
+.spoiler-toggle{display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer;user-select:none;}
+.spoiler-checkbox{width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.15s;flex-shrink:0;}
+.spoiler-checkbox.on{background:var(--grad1);border-color:transparent;color:#fff;}
+.spoiler-label{font-size:12px;font-weight:700;color:var(--text2);}
+.spoiler-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(244,63,142,0.1);border:1px solid rgba(244,63,142,0.3);
+  color:var(--pink);font-size:10px;font-weight:800;
+  padding:2px 8px;border-radius:20px;cursor:pointer;
+  letter-spacing:0.04em;text-transform:uppercase;
+}
+.spoiler-blur{filter:blur(5px);transition:filter 0.2s;user-select:none;}
+.spoiler-blur:hover{filter:blur(0);}
 .shelf-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
 .shelf-pill{font-size:12px;font-weight:700;padding:6px 14px;border-radius:30px;border:2px solid var(--border2);background:none;cursor:pointer;color:var(--text2);transition:all 0.15s;}
 .shelf-pill:hover{border-color:var(--purple);color:var(--purple);}
@@ -544,15 +568,12 @@ input.custom-select::placeholder{color:var(--text3);}
 
   <!-- FRIENDS -->
   <div id="page-friends" class="page">
-    <div class="sec">🔍 Find friends</div>
-    <div class="add-friend-row">
-      <input type="text" id="friend-search" placeholder="Search by name or @handle…" onkeydown="if(event.key==='Enter')searchFriends()"/>
-      <button class="add-friend-btn" onclick="searchFriends()">Find</button>
+    <div style="text-align:center;padding:60px 20px;">
+      <div style="font-size:48px;margin-bottom:16px;">👥</div>
+      <div style="font-family:'Unbounded',sans-serif;font-size:15px;font-weight:900;color:var(--text);margin-bottom:8px;">Friends are coming soon</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;max-width:320px;margin:0 auto;">Once Pageturner launches you'll be able to follow friends, see what they're reading, and share reviews.</div>
+      <div style="margin-top:20px;font-size:22px;">📚✨🔜</div>
     </div>
-    <div class="sec" style="font-size:14px;">Suggested</div>
-    <div class="friends-grid" id="friends-grid"></div>
-    <div class="sec" style="font-size:14px;margin-top:8px;">Following</div>
-    <div class="friends-grid" id="following-grid"></div>
   </div>
 
   <!-- PROFILE -->
@@ -608,10 +629,12 @@ input.custom-select::placeholder{color:var(--text3);}
       <div class="modal-year" id="m-year"></div>
       <div class="divider"></div>
       <div class="form-label">Your rating</div>
-      <div class="star-picker" id="star-picker">
-        <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span>
-        <span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span>
-        <span onclick="setRating(5)">★</span>
+      <div class="rating-picker" id="rating-picker">
+        <div class="rating-opt" data-v="1" onclick="setRating(1)"><span class="r-emoji">😕</span>Meh</div>
+        <div class="rating-opt" data-v="2" onclick="setRating(2)"><span class="r-emoji">🙂</span>Fine</div>
+        <div class="rating-opt" data-v="3" onclick="setRating(3)"><span class="r-emoji">😊</span>Good</div>
+        <div class="rating-opt" data-v="4" onclick="setRating(4)"><span class="r-emoji">🤩</span>Great</div>
+        <div class="rating-opt" data-v="5" onclick="setRating(5)"><span class="r-emoji">🤯</span>Obsessed</div>
       </div>
       <div class="form-label">Add to shelf</div>
       <div class="shelf-pills">
@@ -620,18 +643,12 @@ input.custom-select::placeholder{color:var(--text3);}
         <button class="shelf-pill" data-s="want" onclick="pickShelf('want')">♡ Want</button>
         <button class="shelf-pill" data-s="dnf" onclick="pickShelf('dnf')">✗ DNF</button>
       </div>
-      <div class="form-label">Tropes (pick all that apply)</div>
-      <div class="trope-picker" id="trope-picker">
-        <span class="trope-opt" data-t="Slow burn" onclick="toggleTropeOpt(this)">Slow burn</span>
-        <span class="trope-opt" data-t="Enemies to lovers" onclick="toggleTropeOpt(this)">Enemies to lovers</span>
-        <span class="trope-opt" data-t="Found family" onclick="toggleTropeOpt(this)">Found family</span>
-        <span class="trope-opt" data-t="Chosen one" onclick="toggleTropeOpt(this)">Chosen one</span>
-        <span class="trope-opt" data-t="Fake dating" onclick="toggleTropeOpt(this)">Fake dating</span>
-        <span class="trope-opt" data-t="Forbidden love" onclick="toggleTropeOpt(this)">Forbidden love</span>
-        <span class="trope-opt" data-t="Revenge plot" onclick="toggleTropeOpt(this)">Revenge plot</span>
-        <span class="trope-opt" data-t="Second chance" onclick="toggleTropeOpt(this)">Second chance</span>
-      </div>
+
       <div class="form-label">Your review</div>
+      <div class="spoiler-toggle" onclick="toggleSpoiler()">
+        <div class="spoiler-checkbox" id="spoiler-check"></div>
+        <span class="spoiler-label">⚠️ Contains spoilers</span>
+      </div>
       <textarea id="review" placeholder="What did you think? Spill…"></textarea>
       <div class="modal-actions">
         <button class="btn" onclick="closeModal()">Cancel</button>
@@ -654,13 +671,7 @@ try{userPrefs=JSON.parse(localStorage.getItem('pt_prefs')||'{}');if(!userPrefs.g
 function persist(){try{localStorage.setItem('pt_shelf',JSON.stringify(shelf));}catch(e){}}
 function persistPrefs(){try{localStorage.setItem('pt_prefs',JSON.stringify(userPrefs));}catch(e){}}
 
-const FRIENDS_MOCK=[
-  {id:'f1',name:'Mara Liu',handle:'@mara_reads',init:'ML',color:'linear-gradient(135deg,#8b5cf6,#ec4899)',books:142,avg:4.1,following:false,recent:'The Women'},
-  {id:'f2',name:'Dev Patel',handle:'@devbooks',init:'DP',color:'linear-gradient(135deg,#0ea5e9,#6366f1)',books:89,avg:3.8,following:true,recent:'ACOTAR'},
-  {id:'f3',name:'Sofia Reyes',handle:'@sofialit',init:'SR',color:'linear-gradient(135deg,#f59e0b,#ef4444)',books:203,avg:4.4,following:false,recent:'Throne of Glass'},
-  {id:'f4',name:'Kai Nakamura',handle:'@kaireads',init:'KN',color:'linear-gradient(135deg,#10b981,#3b82f6)',books:67,avg:4.0,following:true,recent:'Six of Crows'},
-];
-let friendsState=[...FRIENDS_MOCK];
+
 
 const YA_TRENDING=['Fourth+Wing+Rebecca+Yarros','Intermezzo+Sally+Rooney','James+Percival+Everett','The+Women+Kristin+Hannah','Tomorrow+Tomorrow+Tomorrow+Zevin','Iron+Flame+Yarros'];
 const YA_GENRES=['fantasy','romance','mystery thriller','science fiction','historical fiction','contemporary fiction'];
@@ -960,7 +971,7 @@ function clearFilters(){
 function openModal(id){
   const book=cache[id];if(!book)return;
   currentBook=book;
-  const saved=shelf[id]||{};currentRating=saved.rating||0;
+  const saved=shelf[id]||{};currentRating=saved.rating||0;currentSpoiler=saved.spoiler||false;
   const v=book.volumeInfo||{};
   document.getElementById('m-title').textContent=v.title||'';
   document.getElementById('m-author').textContent=(v.authors||[]).join(', ');
@@ -969,24 +980,26 @@ function openModal(id){
   if(cover){bg.src=cover;bg.style.display='block';}else{bg.style.display='none';}
   document.getElementById('m-cover-slot').innerHTML=cover?`<img class="modal-hero-cover" src="${cover}" alt=""/>`:`<div class="modal-hero-fallback">📖</div>`;
   document.getElementById('review').value=saved.review||'';
-  updateStars();
+  updateRating();
+  const sc=document.getElementById('spoiler-check');
+  sc.classList.toggle('on',currentSpoiler);
+  sc.textContent=currentSpoiler?'✓':'';
   document.querySelectorAll('.shelf-pill').forEach(p=>p.classList.toggle('active',p.dataset.s===saved.shelf));
-  const savedTropes=saved.tropes||[];
-  document.querySelectorAll('.trope-opt').forEach(t=>t.classList.toggle('active',savedTropes.includes(t.dataset.t)));
+
   document.getElementById('modal').style.display='flex';
 }
-function closeModal(){document.getElementById('modal').style.display='none';currentBook=null;currentRating=0;}
-function setRating(n){currentRating=n;updateStars();}
-function updateStars(){document.querySelectorAll('#star-picker span').forEach((s,i)=>s.classList.toggle('on',i<currentRating));}
+function closeModal(){document.getElementById('modal').style.display='none';currentBook=null;currentRating=0;currentSpoiler=false;}
+let currentSpoiler=false;
+function setRating(n){currentRating=n;updateRating();}
+function updateRating(){document.querySelectorAll('.rating-opt').forEach(o=>o.classList.toggle('on',parseInt(o.dataset.v)===currentRating));}
+function toggleSpoiler(){currentSpoiler=!currentSpoiler;document.getElementById('spoiler-check').classList.toggle('on',currentSpoiler);document.getElementById('spoiler-check').textContent=currentSpoiler?'✓':'';}
 function pickShelf(s){document.querySelectorAll('.shelf-pill').forEach(p=>p.classList.toggle('active',p.dataset.s===s));}
 function getShelf(){const a=document.querySelector('.shelf-pill.active');return a?a.dataset.s:null;}
-function toggleTropeOpt(el){el.classList.toggle('active');}
-function getSelectedTropes(){return [...document.querySelectorAll('.trope-opt.active')].map(t=>t.dataset.t);}
 
 function saveBook(){
   if(!currentBook)return;
   const id=currentBook.id,s=getShelf();
-  shelf[id]={book:currentBook,rating:currentRating,shelf:s,review:document.getElementById('review').value.trim(),tropes:getSelectedTropes(),at:Date.now()};
+  shelf[id]={book:currentBook,rating:currentRating,shelf:s,review:document.getElementById('review').value.trim(),spoiler:currentSpoiler,at:Date.now()};
   persist();closeModal();
   document.querySelectorAll(`.book-card[data-id="${id}"]`).forEach(card=>{
     card.classList.toggle('saved',!!s);
@@ -1007,7 +1020,6 @@ function showPage(p){
   if(p==='shelf')renderShelf();
   if(p==='profile')renderProfile();
   if(p==='activity')renderActivity();
-  if(p==='friends')renderFriends();
 }
 
 /* ══════════════════════════════════════
@@ -1029,9 +1041,9 @@ function renderShelf(){
       <div class="shelf-info">
         <div class="shelf-title">${v.title||'Untitled'}</div>
         <div class="shelf-author">${(v.authors||[])[0]||''}</div>
-        ${s.rating?`<div class="shelf-stars">${stars(s.rating,'s-star',12)}</div>`:''}
-        ${s.review?`<div class="shelf-review">"${s.review}"</div>`:''}
-        ${s.tropes?.length?`<div class="shelf-tropes">${s.tropes.map(t=>`<span class="shelf-trope">${t}</span>`).join('')}</div>`:''}
+        ${s.rating?'<div style="margin-bottom:3px;">'+ratingBadge(s.rating)+'</div>':''}
+        ${s.review?'<div class="shelf-review'+(s.spoiler?' spoiler-blur':'')+'">"'+s.review+'"'+(s.spoiler?' <span class="spoiler-pill">⚠ Spoiler</span>':'')+'</div>':''}
+        
       </div>
       <span class="shelf-arrow">›</span>
     </div>`;
@@ -1044,13 +1056,8 @@ function renderShelf(){
 function renderActivity(){
   const feed=document.getElementById('activity-feed');
   const myItems=Object.values(shelf).filter(s=>s.shelf&&s.book).sort((a,b)=>b.at-a.at).slice(0,5);
-  const myActs=myItems.map(s=>({user:userPrefs.name||'You',init:(userPrefs.name||'Y')[0].toUpperCase(),color:'linear-gradient(135deg,#7c3aed,#f43f8e)',action:s.shelf==='read'?'finished':'added to shelf',book:s.book,rating:s.rating,review:s.review,time:timeAgo(s.at)}));
-  const friendActs=[
-    {user:'Mara Liu',init:'ML',color:'linear-gradient(135deg,#8b5cf6,#ec4899)',action:'finished',bookTitle:'A Court of Thorns and Roses',rating:5,review:'My entire personality now.',time:'1h ago'},
-    {user:'Dev Patel',init:'DP',color:'linear-gradient(135deg,#0ea5e9,#6366f1)',action:'added to shelf',bookTitle:'Six of Crows',rating:0,review:'',time:'3h ago'},
-    {user:'Sofia Reyes',init:'SR',color:'linear-gradient(135deg,#f59e0b,#ef4444)',action:'finished',bookTitle:'The Cruel Prince',rating:4,review:'Cardan has absolutely destroyed me.',time:'1d ago'},
-  ];
-  const all=[...myActs,...friendActs];
+  const myActs=myItems.map(s=>({user:userPrefs.name||'You',init:(userPrefs.name||'Y')[0].toUpperCase(),color:'linear-gradient(135deg,#7c3aed,#f43f8e)',action:s.shelf==='read'?'finished':'added to shelf',book:s.book,rating:s.rating,review:s.review,spoiler:s.spoiler,time:timeAgo(s.at)}));
+  const all=[...myActs];
   if(!all.length){feed.innerHTML=`<div class="empty"><span class="empty-emoji">⚡</span><p>No activity yet</p><small>Save books to see activity here</small></div>`;return;}
   feed.innerHTML=all.map(a=>{
     const cover=a.book?coverUrl(a.book):'';
@@ -1065,7 +1072,7 @@ function renderActivity(){
           <span class="act-book" onclick="${bid?`openModal('${bid}')`:''}">«${bookName}»</span>
           <span class="act-time">${a.time}</span>
         </div>
-        ${a.rating?`<div class="act-stars">${stars(a.rating,'a-star',11)}</div>`:''}
+        ${a.rating?'<div style="margin-top:3px;">'+ratingBadge(a.rating)+'</div>':''}
         ${a.review?`<div class="act-review">"${a.review}"</div>`:''}
       </div>
       <div class="act-cover">${cover?`<img src="${cover}" alt=""/>`:''}</div>
@@ -1076,32 +1083,9 @@ function renderActivity(){
 /* ══════════════════════════════════════
    FRIENDS
 ══════════════════════════════════════ */
-function renderFriends(){
-  const sugg=friendsState.filter(f=>!f.following);
-  const foll=friendsState.filter(f=>f.following);
-  document.getElementById('friends-grid').innerHTML=sugg.map(friendCard).join('')||`<p class="loading-msg">No suggestions.</p>`;
-  document.getElementById('following-grid').innerHTML=foll.map(friendCard).join('')||`<p class="loading-msg">Not following anyone yet.</p>`;
-}
-function friendCard(f){
-  return `<div class="friend-card">
-    <div class="friend-top">
-      <div class="friend-avatar" style="background:${f.color}">${f.init}</div>
-      <div><div class="friend-name">${f.name}</div><div class="friend-handle">${f.handle}</div></div>
-    </div>
-    <div class="friend-stats">
-      <span class="friend-stat"><span>${f.books}</span> books</span>
-      <span class="friend-stat"><span>${f.avg}</span> avg ★</span>
-    </div>
-    <button class="follow-btn ${f.following?'ing':'f'}" onclick="toggleFollow('${f.id}')">${f.following?'Following':'Follow'}</button>
-  </div>`;
-}
-function toggleFollow(id){const f=friendsState.find(x=>x.id===id);if(f){f.following=!f.following;renderFriends();}}
-function searchFriends(){
-  const q=document.getElementById('friend-search').value.trim().toLowerCase();
-  if(!q){renderFriends();return;}
-  const res=FRIENDS_MOCK.filter(f=>f.name.toLowerCase().includes(q)||f.handle.includes(q));
-  document.getElementById('friends-grid').innerHTML=res.length?res.map(friendCard).join(''):`<p class="loading-msg">No users found for "${q}"</p>`;
-}
+
+
+
 
 /* ══════════════════════════════════════
    PROFILE
